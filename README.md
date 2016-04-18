@@ -6,6 +6,7 @@ Node.js Applikation für das Integrationsseminar 2 (BSc Wirtschaftsinformatik, Z
 2. Clone git repository: `git clone https://github.com/99999989/rating-api.git`
 3. Change directory: `cd rating-api`
 4. Install all project dependencies: `npm install`
+5. [Download and import Postman Collection](http://svendroid.com/ZHAW/Rating_API.json.postman_collection)
 
 ## Start Server 
 1. Go to server _bin_ folder: `cd <your working directory>/rating-api/bin`
@@ -37,7 +38,7 @@ The server is reachable via [http://localhost:3001/](http://localhost:3001/)
 ## Routes
 - Get a random resource: `GET api/demo/:userId`
 - Save rating of random resource: `POST api/rating/`
- 
+
 ## Models
 
 ![data model](public/images/ERD_ratingAPI.png "Rating API data model")
