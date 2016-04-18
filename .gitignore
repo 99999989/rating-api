@@ -1,0 +1,11 @@
+.idea/
+/node_modules/
+/dist/
+/coverage/
+/docs/
+/typings/
+
+npm-debug.log
+.vcode
+src/config.json
+rating-api.iml
