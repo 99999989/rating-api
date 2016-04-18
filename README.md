@@ -6,7 +6,7 @@ Node.js Applikation für das Integrationsseminar 2 (BSc Wirtschaftsinformatik, Z
 2. Clone git repository: `git clone https://github.com/99999989/rating-api.git`
 3. Change directory: `cd rating-api`
 4. Install all project dependencies: `npm install`
-5. [Download and import Postman Collection](http://svendroid.com/ZHAW/Rating_API.json.postman_collection)
+5. [Download and import Postman Collection](http://svendroid.com/zhaw/Rating_API.json.postman_collection)
 
 ## Start Server 
 1. Go to server _bin_ folder: `cd <your working directory>/rating-api/bin`
