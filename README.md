@@ -40,4 +40,4 @@ The server is reachable via [http://localhost:3001/](http://localhost:3001/)
  
 ## Models
 
-![data model](ERD_ratingAPI.png "Rating API data model")
+![data model](public/images/ERD_ratingAPI.png "Rating API data model")
