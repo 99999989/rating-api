@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var expressValidator = require('express-validator');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
@@ -55,9 +54,10 @@ db.once('open', function () {
     });
 
     // Routes
-    app.use('/api/users/', users);
+    app.use('/api/users', users);
     app.use('/api/ratings', ratings);
     app.use('/api/resources', resources);
+    //app.use('/api/demo', demo);
     app.use('/api/', routes);
     app.use('/', function(req, res, next) {
         res.redirect('/api/');
