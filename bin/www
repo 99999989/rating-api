@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('sample-manager-server:server');
+var debug = require('debug')('rating-api-server:server');
 var http = require('http');
 var httpProxy = require('http-proxy');
 

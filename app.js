@@ -17,7 +17,7 @@ var resources = require('./routes/resources');
 var app = express();
 
 // DB setup
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/ratingApiDb');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/ratingApiDb');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
@@ -42,7 +42,7 @@ db.once('open', function () {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
 
-    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(__dirname, 'public/frontend')));
 
 
     // Disable cache explicitly
