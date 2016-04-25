@@ -99,7 +99,7 @@ body {
 }
 
 /* View */
-#page {
+.page {
 	width: 100%;
 	max-width: 1400px;
 	margin: 0 auto;
@@ -112,6 +112,13 @@ body {
 }
 #content img {
 	width: 100%;
+}
+
+#content-text {
+	width: 100%;
+	height: 300px;
+	text-align: center;
+	padding-top: 100px;
 }
 
 #get {
@@ -177,4 +184,13 @@ input[type=submit]:active, button:active, .button:active {
 }
 .clear {
 	clear: both;
+}
+body {
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
+}
+
+main {
+	flex: 1 0 auto;
 }

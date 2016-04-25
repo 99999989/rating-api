@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
 
 
@@ -23,7 +24,9 @@ $(document).ready(function () {
 var host = 'https://dry-dawn-55947.herokuapp.com';
 //var host = 'http://localhost:3001';
 function loaded() {
+    $("#content-text").css({display: 'none'});
     $("#loading-spinner").css({opacity: 0});
+    $("#rating-pane").css({display: 'inline'});
     Materialize.fadeInImage('#content-image');
 }
 
@@ -43,8 +46,38 @@ function getContent() {
     });
 }
 
+var positiveConfirmTexts = [
+    'Dir gefällt das? Naja... <br> In jedem Ende liegt ein neuer Anfang.',
+    'Danke für dein positives Feedback ;)',
+    'Echt toll, dass du hier mitmachst...',
+    'Geschmäcker sind verschieden...',
+    'Wir suchen nach dem nächsten Bild...',
+    '"In jedem Ende liegt ein neuer Anfang."',
+    '"Leben ist das, was passiert, während du andere Dinge im Kopf hast."'
+];
+
+var negativeConfirmTexts = [
+    'Warum denn so negativ ;)',
+    'Man muss nicht alles mögen...',
+    'Hoffentlich gefällt dir das nächste Bild besser...',
+    'Wir sind für jede Kritik offen...',
+    'Es könnte schlimmer sein...',
+    '"Eifersucht ist die Leidenschaft, die mit Eifer sucht, was Leiden schafft."',
+    '"Vergiss Sicherheit. Lebe, wo du fürchtest zu leben. Zerstöre deinen Ruf. Sei berüchtigt."'
+];
+
 // Get Random Content, rating: 0=Dislike, 1=Like, ""=Ohne
 function saveRating(content, rating) {
+    var random = Math.random();
+    var confirmText = '';
+    if (rating === 1) {
+        confirmText = positiveConfirmTexts[Math.floor(positiveConfirmTexts.length * random)];
+    } else {
+        confirmText = negativeConfirmTexts[Math.floor(negativeConfirmTexts.length * random)];
+    }
+    $("#rating-pane").css({display: 'none'});
+    $("#content-text").html(confirmText);
+    $("#content-text").css({display: 'block'});
     $("#content-image").css({opacity: 0});
     $("#loading-spinner").css({opacity: 1});
 
