@@ -54,12 +54,15 @@ function getContent() {
         type: "get"
     }).done(function (msg) {
 
-        //alert("Msg: "+JSON.stringify(msg));
-        if (msg.url.indexOf('.mp4') > -1) {
+        var isMp4 =  msg.url.indexOf('.mp4') > -1,
+            isWebm = msg.url.indexOf('.webm') > -1,
+            isOgg = msg.url.indexOf('.ogg') > -1;
+        if (isMp4 || isWebm || isOgg) {
             $("#content-image").css({display: 'none'});
             var video = document.getElementById('content-video');
-            var mp4 = document.getElementById('content-mp4');
-            mp4.src = msg.url;
+            var source = document.getElementById('content-mp4');
+            source.type = isMp4 ? 'video/mp4' : isWebm ? 'video/webm' : 'video/ogg';
+            source.src = msg.url;
             video.load();
             video.play();
             $('#content-video').css({display: 'block'});
