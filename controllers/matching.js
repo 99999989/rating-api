@@ -47,7 +47,7 @@ exports.requestResource = function (req, res, next) {
 
 function getNewResource(res) {
     // direct way
-    client.get('http://www.splashbase.co/api/v1/images/random?videos_only=true', function (data, response) {
+    client.get('http://www.splashbase.co/api/v1/images/random', function (data, response) {
         var resource = new Resource();
         resource.url = data.url;
         resource.htmlCode = '<img src="' + resource.url + '" id="content-image" class="materialboxed" />';

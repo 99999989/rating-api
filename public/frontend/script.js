@@ -56,6 +56,7 @@ function getContent() {
 
         //alert("Msg: "+JSON.stringify(msg));
         if (msg.url.indexOf('.mp4') > -1) {
+            $("#content-image").css({display: 'none'});
             var video = document.getElementById('content-video');
             var mp4 = document.getElementById('content-mp4');
             mp4.src = msg.url;
@@ -64,6 +65,7 @@ function getContent() {
             $('#content-video').css({display: 'block'});
 
         } else {
+            $("#content-image").css({display: 'block'});
             $("#content-image").attr("src", msg.url);
         }
 
