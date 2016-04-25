@@ -19,18 +19,31 @@ $(document).ready(function () {
         var resourceId = $("#content_name").val();
         saveRating(resourceId, 0);
     });
+
+
+    document.getElementById('content-video').addEventListener('loadeddata', function() {
+        // Video is loaded and can be played
+        initRatePane();
+        Materialize.fadeInImage('#content-video');
+    }, false);
 });
 
-var host = 'https://dry-dawn-55947.herokuapp.com';
-//var host = 'http://localhost:3001';
-function loaded() {
+function initRatePane() {
     $(".splash-pane").css({display: 'none'});
     $("#loading-spinner").css({opacity: 0});
     $("#rating-pane").css({display: 'inline'});
     $("#average-rating").html('?');
     $("#rating-count").html('?');
-    Materialize.fadeInImage('#content-image');
 }
+var host = 'https://dry-dawn-55947.herokuapp.com';
+//var host = 'http://localhost:3001';
+
+function loaded() {
+    initRatePane();
+    Materialize.fadeInImage('#content-image');
+
+}
+
 
 // Get Random Content, rating: 0=Dislike, 1=Like, ""=Ohne
 function getContent() {
@@ -42,7 +55,18 @@ function getContent() {
     }).done(function (msg) {
 
         //alert("Msg: "+JSON.stringify(msg));
-        $("#content-image").attr("src", msg.url);
+        if (msg.url.indexOf('.mp4') > -1) {
+            var video = document.getElementById('content-video');
+            var mp4 = document.getElementById('content-mp4');
+            mp4.src = msg.url;
+            video.load();
+            video.play();
+            $('#content-video').css({display: 'block'});
+
+        } else {
+            $("#content-image").attr("src", msg.url);
+        }
+
         $("#content_name").val(msg._id);
 
     });
@@ -82,6 +106,7 @@ function saveRating(content, rating) {
     $("#content-text").html(confirmText);
     $(".splash-pane").css({display: 'block'});
     $("#content-image").css({opacity: 0});
+    $("#content-video").css({display: none});
     $("#loading-spinner").css({opacity: 1});
 
     $.ajax({
