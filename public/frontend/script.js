@@ -35,8 +35,6 @@ function initRatePane() {
     $("#average-rating").html('?');
     $("#rating-count").html('?');
 }
-var host = 'https://dry-dawn-55947.herokuapp.com';
-//var host = 'http://localhost:3001';
 
 function loaded() {
     initRatePane();
@@ -50,7 +48,7 @@ function getContent() {
     $("#content-image").css({opacity: 0});
 
     $.ajax({
-        url: host + "/api/matching/resource/" + $.urlParam('name'),
+        url:  "/api/matching/resource/" + $.urlParam('name'),
         type: "get"
     }).done(function (msg) {
 
@@ -116,7 +114,7 @@ function saveRating(content, rating) {
     $("#loading-spinner").css({opacity: 1});
 
     $.ajax({
-        url: host + "/api/matching/rating",
+        url: "/api/matching/rating",
         type: "post",
         data: {
             username: $.urlParam('name'),
