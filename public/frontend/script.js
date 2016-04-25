@@ -23,7 +23,7 @@ $(document).ready(function () {
 var host = 'https://dry-dawn-55947.herokuapp.com';
 //var host = 'http://localhost:3001';
 function loaded() {
-    $("#loading-spinner").removeClass('active');
+    $("#loading-spinner").css({opacity: 0});
     Materialize.fadeInImage('#content-image');
 }
 
@@ -46,7 +46,7 @@ function getContent() {
 // Get Random Content, rating: 0=Dislike, 1=Like, ""=Ohne
 function saveRating(content, rating) {
     $("#content-image").css({opacity: 0});
-    $("#loading-spinner").addClass('active');
+    $("#loading-spinner").css({opacity: 1});
 
     $.ajax({
         url: host + "/api/matching/rating",

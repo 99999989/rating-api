@@ -27,34 +27,24 @@
 <body>
 
 <header>
-
 </header>
-
+<div class="progress" id="loading-spinner" style="position: fixed; top: 0px; left: 0px; margin: 0px">
+    <div class="indeterminate"></div>
+</div>
 <div id="page">
     <h1>Rate It!</h1>
 
 
-    <button id="get" class="waves-effect waves-ripple waves-light white-text" onclick="">Get First Content</button>
+    <button id="get" class="waves-effect waves-ripple waves-light white-text" onclick=""><span class="material-icons large">replay</span></button>
 
     <div class="clear"></div>
 
-    <div id="content">
+    <div id="content valign-wrapper">
 
-        <div id=loading-spinner" class="preloader-wrapper active" style="position: absolute; top: 50%; left: 48%;">
-            <div class="spinner-layer spinner-red-only">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
-                </div><div class="gap-patch">
-                <div class="circle"></div>
-            </div><div class="circle-clipper right">
-                <div class="circle"></div>
-            </div>
-            </div>
-        </div>
 
 
         <!--<img src="http://loremflickr.com/640/480/surf" />-->
-        <img id="content-image" class="materialboxed responsive-img" onload="loaded()">
+        <img id="content-image" class="materialboxed responsive-img" onload="loaded()" >
 
         <!--<video width="320" height="240" controls>
             <source src="https://splashbase.s3.amazonaws.com/mazwai/regular/marton_solti--KOVITOMI_MIDNIGHT_HALFPIPE_SESSION.mp4%3F1405192554" type="video/mp4">
