@@ -6,7 +6,8 @@
 var Rating = require('../models/rating'),
     Resource = require('../models/resource'),
     User = require('../models/user'),
-    Util = require('../util');
+    Util = require('../util'),
+    _   = require('lodash');
 
 // REST client
 var Client = require('node-rest-client').Client;
@@ -16,7 +17,7 @@ var client = new Client();
  * Create rating
  */
 exports.requestResource = function (req, res, next) {
-    Resource.find({ 'ratings.user': {username: {$ne: req.params.username } }})
+    Resource.find()
         .populate({
             path: 'ratings',
             populate: { path: 'user' }
@@ -27,12 +28,19 @@ exports.requestResource = function (req, res, next) {
                     status: 500
                 });
             } else {
-                if (resources.length > 0) {
-                    res.jsonp(resources[0]);
-                } else {
-                    getNewResource(res);
-                }
+                for (var i = 0; i < resources.length; i++) {
+                    var rated = false;
+                    _.forEach(resources[i].ratings, function(rating) {
+                        if (rating.user && rating.user.username === req.params.username) {
+                            rated = true;
+                        }
+                    });
+                    if (!rated) {
+                        return res.jsonp(resources[i]);
+                    }
 
+                }
+                getNewResource(res);
             }
         });
 };
