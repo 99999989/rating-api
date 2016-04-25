@@ -7,7 +7,7 @@ var Rating = require('../models/rating'),
     Resource = require('../models/resource'),
     User = require('../models/user'),
     Util = require('../util'),
-    _   = require('lodash');
+    _ = require('lodash');
 
 // REST client
 var Client = require('node-rest-client').Client;
@@ -20,7 +20,7 @@ exports.requestResource = function (req, res, next) {
     Resource.find()
         .populate({
             path: 'ratings',
-            populate: { path: 'user' }
+            populate: {path: 'user'}
         })
         .exec(function (err, resources) {
             if (err) {
@@ -30,7 +30,7 @@ exports.requestResource = function (req, res, next) {
             } else {
                 for (var i = 0; i < resources.length; i++) {
                     var rated = false;
-                    _.forEach(resources[i].ratings, function(rating) {
+                    _.forEach(resources[i].ratings, function (rating) {
                         if (rating.user && rating.user.username === req.params.username) {
                             rated = true;
                         }
@@ -105,7 +105,23 @@ exports.rateResource = function (req, res, next) {
                                     if (err) {
                                         return res.status(400).send(Util.easifyErrors(err));
                                     }
-                                    res.jsonp(rating);
+                                    Rating.aggregate([
+                                            {$match: {resource: resource._id}},
+                                            {
+                                                $group: {
+                                                    _id: rating._id,
+                                                    average: {$avg: '$score'},
+                                                    count: { $sum: 1 }
+                                                }
+                                            }
+                                        ])
+                                        .exec(function (err, avgScore) {
+                                            if (err) return next(err);
+                                            res.jsonp({
+                                                average: avgScore[0].average,
+                                                count: avgScore[0].count
+                                            });
+                                        });
                                 });
                             });
                     });

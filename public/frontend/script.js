@@ -24,9 +24,11 @@ $(document).ready(function () {
 var host = 'https://dry-dawn-55947.herokuapp.com';
 //var host = 'http://localhost:3001';
 function loaded() {
-    $("#content-text").css({display: 'none'});
+    $(".splash-pane").css({display: 'none'});
     $("#loading-spinner").css({opacity: 0});
     $("#rating-pane").css({display: 'inline'});
+    $("#average-rating").html('?');
+    $("#rating-count").html('?');
     Materialize.fadeInImage('#content-image');
 }
 
@@ -75,9 +77,10 @@ function saveRating(content, rating) {
     } else {
         confirmText = negativeConfirmTexts[Math.floor(negativeConfirmTexts.length * random)];
     }
+
     $("#rating-pane").css({display: 'none'});
     $("#content-text").html(confirmText);
-    $("#content-text").css({display: 'block'});
+    $(".splash-pane").css({display: 'block'});
     $("#content-image").css({opacity: 0});
     $("#loading-spinner").css({opacity: 1});
 
@@ -89,8 +92,10 @@ function saveRating(content, rating) {
             score: rating,
             resourceId: content
         }
-    }).done(function (msg) {
+    }).done(function (res) {
         //alert(JSON.stringify(msg));
+        $("#average-rating").html(res.average);
+        $("#rating-count").html(res.count);
         getContent();
     });
 }
