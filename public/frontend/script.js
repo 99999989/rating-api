@@ -106,7 +106,7 @@ function saveRating(content, rating) {
     $("#content-text").html(confirmText);
     $(".splash-pane").css({display: 'block'});
     $("#content-image").css({opacity: 0});
-    $("#content-video").css({display: none});
+    $("#content-video").css({display: 'none'});
     $("#loading-spinner").css({opacity: 1});
 
     $.ajax({
