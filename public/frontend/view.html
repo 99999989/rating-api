@@ -32,23 +32,36 @@
     <div class="progress" id="loading-spinner" style="position: fixed; top: 0px; left: 0px; margin: 0px">
         <div class="indeterminate"></div>
     </div>
+
     <div class="page">
-        <h1>Rate It!</h1>
-        <button id="get" class="waves-effect waves-ripple waves-light white-text right">
-            <span class="material-icons large">replay</span>
-        </button>
+        <div class="row">
+            <div class="col s4 m3 l2 grey-text">
+                <i class="material-icons left">face</i> <span class="truncate" id="username"></span>
+            </div>
+            <div class="col s4 m3 l2 grey-text">
+                <i class="material-icons left heading">replay</i> <span class="truncate" id="user-count"></span>
+            </div>
+            <div class="col s4 m3 l2 grey-text">
+                <i class="material-icons left heading">equalizer</i> <span class="truncate" id="user-average"></span>
+            </div>
+        </div>
+
+        <h1 style="margin-bottom: 0px">Rate It!</h1>
+        <a id="get" style="top: -62px" class="btn btn-large btn-flat waves-effect waves-ripple waves-light right">
+            <i id="reload" class="material-icons" style="font-size: 1.9rem">loop</i>
+        </a>
 
         <div class="clear"></div>
 
         <div class="splash-pane">
+            <img  class="content-image circle "  height="100px">
             <h5>Bewertungen</h5>
             <div id="rating-count">?</div>
             <h5>Durchschnitt</h5>
-            <div id="average-rating">?</div>
-            <br>
+            <div id="rating-average">?</div>
+
             <br>
             <div class="divider"></div>
-            <br>
             <p id="content-text">Willkommen</p>
         </div>
 
@@ -56,7 +69,7 @@
             <div id="content">
 
                 <!--<img src="http://loremflickr.com/640/480/surf" />-->
-                <img id="content-image" class="materialboxed responsive-img" onload="loaded()">
+                <img id="content-image" class="content-image materialboxed responsive-img" onload="loaded()">
                 <video id="content-video" autoplay="true" preload="auto" class="responsive-video" onload="loaded()" controls>
                     <source id="content-mp4" type="video/mp4">
                 </video>

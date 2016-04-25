@@ -2,11 +2,13 @@
 $(document).ready(function () {
 
 
+    getContent();
+    $("#username").html($.urlParam('name'));
 // Get First Random Content
     $("#get").click(function () {
+        $("#reload").addClass('trigger');
         getContent();
-    })
-    getContent();
+    });
 
 // Get Random Content, Antwort: Like
     $("#up").click(function () {
@@ -32,13 +34,14 @@ function initRatePane() {
     $(".splash-pane").css({display: 'none'});
     $("#loading-spinner").css({opacity: 0});
     $("#rating-pane").css({display: 'inline'});
-    $("#average-rating").html('?');
+    $("#rating-average").html('?');
     $("#rating-count").html('?');
 }
 
 function loaded() {
     initRatePane();
     Materialize.fadeInImage('#content-image');
+    $("#reload").removeClass('trigger');
 
 }
 
@@ -67,9 +70,9 @@ function getContent() {
 
         } else {
             $("#content-image").css({display: 'block'});
-            $("#content-image").attr("src", msg.url);
+            $(".content-image").attr("src", msg.url);
         }
-
+        //$("#reload").removeClass('trigger');
         $("#content_name").val(msg._id);
 
     });
@@ -123,8 +126,11 @@ function saveRating(content, rating) {
         }
     }).done(function (res) {
         //alert(JSON.stringify(msg));
-        $("#average-rating").html(res.average);
-        $("#rating-count").html(res.count);
+        $("#rating-average").html(res.resourceAverage.toFixed(2));
+        $("#rating-count").html(res.resourceCount);
+        $("#user-average").html(res.userAverage.toFixed(2));
+        $("#user-count").html(res.userCount);
+
         getContent();
     });
 }

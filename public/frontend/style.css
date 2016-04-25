@@ -122,16 +122,16 @@ body {
 	display: none;
 }
 .splash-pane {
-	margin-top: 35px;
+	margin-top: 0px;
 	width: 100%;
-	height: 300px;
+	height: 350px;
 	text-align: center;
 }
 
 #get {
 	display: block;
 	margin-bottom: 20px;
-	padding: 15px 40px;
+	/*padding: 15px 40px;*/
 }
 .rate {
 	float: left;
@@ -200,4 +200,41 @@ body {
 
 main {
 	flex: 1 0 auto;
+}
+
+a#get:hover {
+	color: white;
+}
+a#get {
+	top: 0px;
+	color: #D81E28;
+}
+
+#reload {
+	transform: rotate(0deg);
+	-webkit-transform: rotate(0deg) ;
+	-moz-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	transition:transform 2.2236s ease-in-out;
+	-webkit-transition:transform 2.2236s ease-in-out;
+	-moz-transition:transform 2.2236s ease-in-out;
+	-o-transition:transform    2.2236s ease-in-out;
+}
+#reload.material-icons.trigger {
+	transform: rotate(-720deg) ;
+	-webkit-transform: rotate(-720deg) ;
+	-moz-transform: rotate(-720deg);
+	-o-transform: rotate(-720deg);
+	-ms-transform: rotate(-720deg);
+}
+.overall-counter {
+	float: left;
+	display: block;
+	top: -30px;
+
+}
+
+.heading {
+	padding-left: 10px;
 }

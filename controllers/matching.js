@@ -117,10 +117,26 @@ exports.rateResource = function (req, res, next) {
                                         ])
                                         .exec(function (err, avgScore) {
                                             if (err) return next(err);
-                                            res.jsonp({
-                                                average: avgScore[0].average,
-                                                count: avgScore[0].count
-                                            });
+                                            var resObject = {
+                                                resourceAverage: avgScore[0].average,
+                                                resourceCount: avgScore[0].count
+                                            };
+                                            Rating.aggregate([
+                                                    {$match: {user: currUser._id}},
+                                                    {
+                                                        $group: {
+                                                            _id: currUser._id,
+                                                            average: {$avg: '$score'},
+                                                            count: { $sum: 1 }
+                                                        }
+                                                    }
+                                                ])
+                                                .exec(function (err, avgScore) {
+                                                    if (err) return next(err);
+                                                    resObject.userAverage = avgScore[0].average;
+                                                    resObject.userCount = avgScore[0].count;
+                                                    res.jsonp(resObject);
+                                                });
                                         });
                                 });
                             });
