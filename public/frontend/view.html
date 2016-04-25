@@ -1,25 +1,28 @@
 <!doctype html>
 <html>
-	<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">	
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title>Integration 2</title>
-	
-	<!-- Style -->
-	<link rel="stylesheet" type="text/css" href="style.css">
+    <title>Integration 2</title>
 
-	<link href='https://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
-	
-	<!-- JS -->	
-	<script type="text/javascript" src="jquery-2.1.1.min.js"></script>
-	<script type="text/javascript" src="script.js"></script>
+    <!-- Style -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="materialize.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- JS -->
+    <script type="text/javascript" src="jquery-2.1.1.min.js"></script>
+    <script src="materialize.min.js"></script>
+    <script type="text/javascript" src="script.js"></script>
 
 
-	<!-- Favicon - - - - - - - - - - - - - - - -->
-	<!-- <link rel="icon" type="image/ico" href="" /> -->
+    <!-- Favicon - - - - - - - - - - - - - - - -->
+    <!-- <link rel="icon" type="image/ico" href="" /> -->
 
-	</head>
+</head>
 <body>
 
 <header>
@@ -27,29 +30,40 @@
 </header>
 
 <div id="page">
-	<h1>Rate It!</h1>
+    <h1>Rate It!</h1>
 
 
-	<button id="get">Get First Content</button>
-	
-	<div class="rate button" id="up">
-		<img src="img/up.png">
-	</div>
-	
-	<div class="rate button" id="down">
-		<img src="img/down.png">
-	</div>
-	
-	<div class="clear"></div>
-	
-	<div id="content">
-		<img src="https://images.unsplash.com/photo-1438893761775-f1db119d27b2?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&w=1080&fit=max&s=78cca69182730f8e3a393b946249d8cf">
-	</div>
-	<input type="text" id="content_name" value="bildX">
+    <button id="get" class="waves-effect waves-ripple waves-light white-text" onclick="">Get First Content</button>
 
-	<footer>
-		Integration 2 - Beeler, Heinrich, Metzger, Sommer
-	</footer>
+    <div class="clear"></div>
+
+    <div id="content">
+        <div class="progress" style="position: absolute; top: 220px">
+            <div class="indeterminate"></div>
+        </div>
+
+
+
+        <!--<img src="http://loremflickr.com/640/480/surf" />-->
+        <img id="content-image" class="materialboxed" >
+
+        <!--<video width="320" height="240" controls>
+            <source src="https://splashbase.s3.amazonaws.com/mazwai/regular/marton_solti--KOVITOMI_MIDNIGHT_HALFPIPE_SESSION.mp4%3F1405192554" type="video/mp4">
+        </video>-->
+    </div>
+    <div class="rate button waves-effect waves-ripple waves-light" id="up">
+        <img src="img/up.png">
+    </div>
+
+    <div class="rate button waves-effect waves-ripple waves-light" id="down">
+        <img src="img/down.png">
+    </div>
+
+    <input type="text" id="content_name" value="bildX" disabled>
+
+    <footer>
+        Integration 2 - Beeler, Heinrich, Metzger, Sommer
+    </footer>
 </div>
 
 </body>

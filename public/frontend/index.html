@@ -1,25 +1,27 @@
 <!doctype html>
 <html>
-	<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">	
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title>Integration 2</title>
-	
-	<!-- Style -->
-	<link rel="stylesheet" type="text/css" href="style.css">
+    <title>Integration 2</title>
 
-	<link href='https://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
-	
-	<!-- JS -->	
-	<script type="text/javascript" src="jquery-2.1.1.min.js"></script>
-	<script type="text/javascript" src="script.js"></script>
+    <!-- Style -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="materialize.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- JS -->
+    <script type="text/javascript" src="jquery-2.1.1.min.js"></script>
+    <script src="materialize.min.js"></script>
+    <script type="text/javascript" src="script.js"></script>
 
 
-	<!-- Favicon - - - - - - - - - - - - - - - -->
-	<!-- <link rel="icon" type="image/ico" href="" /> -->
+    <!-- Favicon - - - - - - - - - - - - - - - -->
+    <!-- <link rel="icon" type="image/ico" href="" /> -->
 
-	</head>
+</head>
 <body>
 
 <header>
@@ -27,12 +29,22 @@
 </header>
 
 <div id="login">
-	<h2>Integration 2</h2>
-	<form action="view.html">
-		<input type="text" name="name" placeholder="Benutzername">
-		<input type="submit" value="Login">
-		<div class="clear"></div>
-	</form>
+    <h2>Integration 2</h2>
+    <form action="view.html">
+        <div class="row">
+            <div class="input-field col s12">
+                <input type="text" name="name" id="username">
+                <label for="username">Benutzername</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <input type="submit" value="Login">
+                <div class="clear"></div>
+            </div>
+        </div>
+    </form>
 </div>
 
 </body>

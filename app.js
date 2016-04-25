@@ -13,6 +13,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var ratings = require('./routes/ratings');
 var resources = require('./routes/resources');
+var matching = require('./routes/matching');
 
 var app = express();
 
@@ -57,7 +58,7 @@ db.once('open', function () {
     app.use('/api/users', users);
     app.use('/api/ratings', ratings);
     app.use('/api/resources', resources);
-    //app.use('/api/demo', demo);
+    app.use('/api/matching', matching);
     app.use('/api/', routes);
     app.use('/', function(req, res, next) {
         res.redirect('/api/');

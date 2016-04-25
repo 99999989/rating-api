@@ -64,6 +64,10 @@ exports.destroy = function (req, res, next) {
  */
 exports.all = function (req, res) {
     Resource.find().sort('-created')
+        .populate({
+            path: 'ratings',
+            populate: { path: 'user' }
+        })
         .exec(function (err, resources) {
         if (err) {
             res.render('error', {
