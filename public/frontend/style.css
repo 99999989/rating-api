@@ -100,6 +100,7 @@ body {
 
 /* View */
 .page {
+	position: relative;
 	width: 100%;
 	max-width: 1400px;
 	margin: 0 auto;
@@ -129,13 +130,14 @@ body {
 }
 
 #get {
-	display: block;
+	position: absolute;
+	top: 60px;
+	right: 0px;
 	margin-bottom: 20px;
-	/*padding: 15px 40px;*/
 }
 .rate {
 	float: left;
-	width: 50%;
+	width: 33.333%;
 	margin-bottom: 20px;
 	text-align: center;
 }
@@ -146,7 +148,10 @@ body {
 	border-right: 2px solid #F0F0F0;
 }
 #down {
-
+	border-left: 2px solid #F0F0F0;
+}
+#whatever img {
+	padding-top: 8px;
 }
 
 /* Footer */
@@ -206,7 +211,6 @@ a#get:hover {
 	color: white;
 }
 a#get {
-	top: 0px;
 	color: #D81E28;
 }
 

@@ -46,8 +46,8 @@
             </div>
         </div>
 
-        <h1 style="margin-bottom: 0px">Rate It!</h1>
-        <a id="get" style="top: -62px" class="btn btn-large btn-flat waves-effect waves-ripple waves-light right">
+        <h1>Rate It!</h1>
+        <a id="get" class="btn btn-large btn-flat waves-effect waves-ripple waves-light right">
             <i id="reload" class="material-icons" style="font-size: 1.9rem">loop</i>
         </a>
 
@@ -66,6 +66,17 @@
         </div>
 
         <div id="rating-pane">
+            <div class="rate button waves-effect waves-ripple waves-light" id="up">
+                <img src="img/thumb_up.png" height="65px">
+            </div>
+            <div class="rate button waves-effect waves-ripple waves-light" id="whatever">
+                <img src="img/whatever.png" height="65px">
+            </div>
+            <div class="rate button waves-effect waves-ripple waves-light" id="down">
+                <img src="img/thumb_down.png" height="65px">
+            </div>
+			<div class="clear"></div>
+			
             <div id="content">
 
                 <!--<img src="http://loremflickr.com/640/480/surf" />-->
@@ -74,18 +85,12 @@
                     <source id="content-mp4" type="video/mp4">
                 </video>
             </div>
-            <div class="rate button waves-effect waves-ripple waves-light" id="up">
-                <img src="img/thumb_up.png" height="65px">
-            </div>
 
-            <div class="rate button waves-effect waves-ripple waves-light" id="down">
-                <img src="img/thumb_down.png" height="65px">
-            </div>
         </div>
     </div>
 </main>
 <footer class="page">
-    <input type="text" id="content_name" value="bildX" disabled>
+    <input type="text" id="content_name" value="" disabled>
     Integration 2 - Beeler, Heinrich, Metzger, Sommer
 </footer>
 </body>

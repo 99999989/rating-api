@@ -15,11 +15,17 @@ $(document).ready(function () {
         var resourceId = $("#content_name").val();
         saveRating(resourceId, 1);
     });
+	
+// Get Random Content, Antwort: Neutral
+    $("#whatever").click(function () {
+        var resourceId = $("#content_name").val();
+        saveRating(resourceId, 0);
+    });
 
 // Get Random Content, Antwort: Dislike
     $("#down").click(function () {
         var resourceId = $("#content_name").val();
-        saveRating(resourceId, 0);
+        saveRating(resourceId, -1);
     });
 
 
