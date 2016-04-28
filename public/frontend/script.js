@@ -104,15 +104,17 @@ var negativeConfirmTexts = [
     '"Vergiss Sicherheit. Lebe, wo du fürchtest zu leben. Zerstöre deinen Ruf. Sei berüchtigt."'
 ];
 
-// Get Random Content, rating: 0=Dislike, 1=Like, ""=Ohne
+// Get Random Content, rating: -1=Dislike, 1=Like, 0=Neutral ""=Ohne
 function saveRating(content, rating) {
     var random = Math.random();
     var confirmText = '';
     if (rating === 1) {
         confirmText = positiveConfirmTexts[Math.floor(positiveConfirmTexts.length * random)];
+    } else if(rating === 0) {
+        confirmText = "Whatever.";
     } else {
         confirmText = negativeConfirmTexts[Math.floor(negativeConfirmTexts.length * random)];
-    }
+	}
 
     $("#rating-pane").css({display: 'none'});
     $("#content-text").html(confirmText);
