@@ -131,8 +131,8 @@ body {
 
 #get {
 	position: absolute;
-	top: 60px;
-	right: 0px;
+	top: 75px;
+	right: 20px;
 	margin-bottom: 20px;
 }
 .rate {
@@ -179,7 +179,7 @@ input[type=text] {
 	font-size: 15px;
 }
 input[type=submit], button, .button {
-	min-width: 140px;
+	min-width: 100px;
 	padding: 10px 15px;
 	border: 0px;
 	border-radius: 0px;
@@ -207,9 +207,6 @@ main {
 	flex: 1 0 auto;
 }
 
-a#get:hover {
-	color: white;
-}
 a#get {
 	color: #D81E28;
 }
@@ -232,13 +229,13 @@ a#get {
 	-o-transform: rotate(-720deg);
 	-ms-transform: rotate(-720deg);
 }
-.overall-counter {
-	float: left;
-	display: block;
-	top: -30px;
-
-}
 
 .heading {
 	padding-left: 10px;
+}
+
+@media screen and (max-width: 600px) {
+	.rate-button {
+		height: 50px;
+	}
 }
