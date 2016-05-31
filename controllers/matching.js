@@ -78,7 +78,7 @@ exports.requestResource = function (req, res, next) {
                     status: 500
                 });
             } else {
-                while ()
+                //while ()
                 var random = Math.random();
                 var resource = resources[Math.floor(resources.length * random)];
                 for (var i = 0; i < resources.length; i++) {
