@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Integration 2</title>
+
+    <!-- Style -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="materialize.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- JS -->
+    <script type="text/javascript" src="jquery-2.1.1.min.js"></script>
+    <script src="materialize.min.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+
+
+    <!-- Favicon - - - - - - - - - - - - - - - -->
+    <!-- <link rel="icon" type="image/ico" href="" /> -->
+
+</head>
+<body>
+
+<header>
+
+</header>
+<div class="container">
+    <h2>Rating API Demo</h2>
+    <div class="row">
+        <div class="col s4">
+            Phase 1
+        </div>
+        <div class="col s4 center-align">
+            Phase 2
+        </div>
+        <div class="col s4 right-align">
+            Phase 3
+        </div>
+    </div>
+    <p class="range-field">
+        <input disabled type="range" id="test5" min="1" max="3" value="1" />
+    </p>
+
+    <div class="row">
+        <div class="col s4">
+            <div class="card" id="phase1">
+                <div class="card-content">
+                    <div class="card-title">Phase 1</div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="resourcesCount" type="number" class="validate">
+                            <label for="resourcesCount">Anzahl Resourcen</label>
+                        </div>
+
+                    </div>
+                    <a class="btn" onclick="startPhase(1)">Phase starten</a>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="card" id="phase2">
+                <div class="card-content">
+                    <div class="card-title">Phase 2</div>
+                    <div class="row">
+                        <div class="col s12">
+                            <h5>Results</h5>
+                        </div>
+                    </div>
+                    <a class="btn">Phase starten</a>
+                </div>
+
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="card" id="phase3">
+                <div class="card-content">
+                    <div class="card-title">Phase 3</div>
+                    <div class="row">
+
+                    </div>
+                    <a class="btn">Phase starten</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="resourcesContainer">
+
+    </div>
+
+</div>
+
+</body>
+</html>

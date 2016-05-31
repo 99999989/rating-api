@@ -6,6 +6,7 @@
 var Rating = require('../models/rating'),
     Resource = require('../models/resource'),
     User = require('../models/user'),
+    Config = require('../models/config'),
     Util = require('../util'),
     _ = require('lodash');
 
@@ -14,7 +15,56 @@ var Client = require('node-rest-client').Client;
 var client = new Client();
 
 /**
- * Create rating
+ * Request new resource
+ */
+exports.startPhase = function (req, res, next) {
+    var config = {
+        key: 'phase',
+        value: req.body.phase,
+        group: 'phase'
+    };
+    Config.findOneAndUpdate({key: 'phase'},
+        config,
+        {upsert: true},
+        function(err, config) {
+            if (req.body.phase === '1') {
+                Rating.remove({}) // Delete ratings
+                    .exec(function(err, ratings) {
+                        Resource.remove({}) // Delete resources
+                            .exec(function (err, resources) {
+
+
+                                res.jsonp({all: 'right'});
+                                getNewResourceAsyncLoop(0, parseInt(req.body.resourcesCount), [], function (resources) {
+                                    Resource.insertMany(resources);
+                                });
+                            });
+
+                    });
+            }
+        });
+
+};
+
+function getNewResourceAsyncLoop(i, limit, resources, callback) {
+    if (i < limit) {
+        client.get('http://www.splashbase.co/api/v1/images/random?images_only=true' /*?videos_only=true, */, function (data, response) {
+            var resource = new Resource();
+            resource.url = data.url;
+            resource.htmlCode = '<img src="' + resource.url + '" id="content-image" class="materialboxed" />';
+            resources.push(resource);
+
+            console.log(resource.url);
+
+            getNewResourceAsyncLoop(++i, limit, resources, callback);
+        });
+    } else {
+        callback(resources);
+    }
+}
+
+/**
+ * Request new resource
  */
 exports.requestResource = function (req, res, next) {
     Resource.find()
@@ -28,6 +78,9 @@ exports.requestResource = function (req, res, next) {
                     status: 500
                 });
             } else {
+                while ()
+                var random = Math.random();
+                var resource = resources[Math.floor(resources.length * random)];
                 for (var i = 0; i < resources.length; i++) {
                     var rated = false;
                     _.forEach(resources[i].ratings, function (rating) {
@@ -36,11 +89,12 @@ exports.requestResource = function (req, res, next) {
                         }
                     });
                     if (!rated) {
-                        return res.jsonp(resources[i]);
+
+                        return res.jsonp();
                     }
 
                 }
-                getNewResource(res);
+                res.jsonp({});
             }
         });
 };
