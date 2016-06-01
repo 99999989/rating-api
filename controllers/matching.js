@@ -70,7 +70,7 @@ exports.getLiveResults = function (req, res, next) {
             for (var i = 0; i < combinations.length; i++) {
                 Rating.find({user: {$in: [combinations[i][0]._id, combinations[i][1]._id]}})
                     .exec(function (err, ratings) {
-                        
+
                     });
             }
         });
@@ -128,7 +128,7 @@ exports.requestResource = function (req, res, next) {
             } else {
                 User.findOne({username: req.params.username})
                     .exec(function (err, user) {
-                        if (user.ratings.length >= (resources.length / 2)) {
+                        if (user.ratings && user.ratings.length >= (resources.length / 2)) {
                             return res.jsonp({phase1: 'completed'});
                         } else {
                             while (true) {
