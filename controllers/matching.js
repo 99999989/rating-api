@@ -128,6 +128,7 @@ exports.requestResource = function (req, res, next) {
             } else {
                 User.findOne({username: req.params.username})
                     .exec(function (err, user) {
+                        if (!user) return res.jsonp({phase1: 'completed'});
                         if (user.ratings && user.ratings.length >= (resources.length / 2)) {
                             return res.jsonp({phase1: 'completed'});
                         } else {
