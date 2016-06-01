@@ -70,7 +70,7 @@ exports.destroy = function (req, res, next) {
 exports.all = function (req, res) {
     User.find()
         .populate('ratings')
-        .sort('-created').exec(function (err, users) {
+        .sort('username').exec(function (err, users) {
         if (err) {
             res.render('error', {
                 status: 500
