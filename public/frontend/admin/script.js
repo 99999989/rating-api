@@ -42,13 +42,14 @@ function getCurrentData() {
                     '" value="' + users[i].ratings.length + '" /></p>' +
                     '<div class="row" style="font-size:x-small"><div class="col s4">0%</div> <div class="col s4 center-align">50%</div><div class="col s4 right-align">100% </div></div>');
             }
-
+/*
             $.ajax({
                 url: '/api/matching/results',
                 type: 'get'
             }).done(function (results) {
 
             });
+            */
         });
     });
 
