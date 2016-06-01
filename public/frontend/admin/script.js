@@ -1,21 +1,30 @@
 
 $(document).ready(function () {
 
-
-
-// Get Random Content, Antwort: Dislike
-    $("#down").click(function () {
-        var resourceId = $("#content_name").val();
-        saveRating(resourceId, -1);
-    });
-
-
 });
 
-getResources();
+getCurrentData();
+setVisible(false, '.phase-finished');
+// Get current data
+function getCurrentData() {
+    $.ajax({
+        url: '/api/matching/phase',
+        type: 'get'
+    }).done(function (response) {
 
-// Start phase
-function getResources() {
+        if (response.phase === '1') {
+            setVisible(true, '#phase2');
+            setVisible(false, '#phase3');
+        } else if (response.phase === '2') {
+            setVisible(true, '#phase2');
+            setVisible(false, '#phase3');
+        } else if (response.phase === '3') {
+            setVisible(true, '#phase2');
+            setVisible(true, '#phase3');
+        }
+
+    });
+
     $.ajax({
         url: '/api/resources/',
         type: 'get'
@@ -24,61 +33,56 @@ function getResources() {
             $('#resourcesContainer').append('<img src="' + resources[i].url + '" height="30px" />');
         }
 
+        $.ajax({
+            url: '/api/users/',
+            type: 'get'
+        }).done(function (users) {
+            for (var i = 0; i < users.length; i++) {
+                $('#userContainer').append('<div>' + users[i].username + '</div><p class="range-field"><input disabled type="range" min="0" max="' + resources.length / 2 +
+                    '" value="' + users[i].ratings.length + '" /></p>' +
+                    '<div class="row" style="font-size:x-small"><div class="col s4">0%</div> <div class="col s4 center-align">50%</div><div class="col s4 right-align">100% </div></div>');
+            }
+
+            $.ajax({
+                url: '/api/matching/results',
+                type: 'get'
+            }).done(function (results) {
+
+            });
+        });
     });
+
+
 }
 
 // Start phase
 function startPhase(phase) {
-    $.ajax({
-        url: '/api/matching/phase',
-        type: 'post',
-        data: {
-            phase: phase,
-            resourcesCount: $("#resourcesCount").val()
-        }
-    }).done(function (msg) {
+    if ($("#resourcesCount").val() > 0 && $("#userCount").val() > 0) {
+        $.ajax({
+            url: '/api/matching/phase',
+            type: 'post',
+            data: {
+                phase: phase,
+                resourcesCount: $("#resourcesCount").val(),
+                userCount: $("#userCount").val()
+            }
+        }).done(function (msg) {
+            Materialize.toast('Phase ' + phase + ' gestartet', 4000);
+            $("#userCount").val('');
+            $("#resourcesCount").val('');
+        });
+    } else {
+        Materialize.toast('Anzahl Ressourcen und/oder User fehlt!', 4000);
+    }
 
-    });
 }
 
-
-// Get Random Content, rating: -1=Dislike, 1=Like, 0=Neutral ""=Ohne
-function saveRating(content, rating) {
-    var random = Math.random();
-    var confirmText = '';
-    if (rating === 1) {
-        confirmText = positiveConfirmTexts[Math.floor(positiveConfirmTexts.length * random)];
-    } else if(rating === 0) {
-        confirmText = "Whatever.";
+function setVisible(visible, id) {
+    if (visible) {
+        $(id).css({display: 'block'});
     } else {
-        confirmText = negativeConfirmTexts[Math.floor(negativeConfirmTexts.length * random)];
-	}
-
-    $("#rating-pane").css({display: 'none'});
-    $("#content-text").html(confirmText);
-    $(".splash-pane").css({display: 'block'});
-    $("#content-image").css({opacity: 0});
-    document.getElementById('content-video').pause();
-    $("#content-video").css({display: 'none'});
-    $("#loading-spinner").css({opacity: 1});
-
-    $.ajax({
-        url: "/api/matching/rating",
-        type: "post",
-        data: {
-            username: $.urlParam('name'),
-            score: rating,
-            resourceId: content
-        }
-    }).done(function (res) {
-        //alert(JSON.stringify(msg));
-        $("#rating-average").html(res.resourceAverage.toFixed(2));
-        $("#rating-count").html(res.resourceCount);
-        $("#user-average").html(res.userAverage.toFixed(2));
-        $("#user-count").html(res.userCount);
-
-        getContent();
-    });
+        $(id).css({display: 'none'});
+    }
 }
 
 $.urlParam = function (name) {

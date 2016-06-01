@@ -4,7 +4,7 @@
  * Controller dependencies
  */
 var Resource = require('../models/resource'),
-    Util = require('../util');
+    Util = require('../util/util');
 
 /**
  * Create resource

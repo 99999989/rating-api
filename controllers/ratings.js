@@ -4,7 +4,7 @@
  * Controller dependencies
  */
 var Rating = require('../models/rating'),
-    Util = require('../util');
+    Util = require('../util/util');
 
 /**
  * Create rating

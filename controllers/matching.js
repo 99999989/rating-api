@@ -7,7 +7,8 @@ var Rating = require('../models/rating'),
     Resource = require('../models/resource'),
     User = require('../models/user'),
     Config = require('../models/config'),
-    Util = require('../util'),
+    Util = require('../util/util'),
+    Combination = require('../util/combination'),
     _ = require('lodash');
 
 // REST client
@@ -26,17 +27,29 @@ exports.startPhase = function (req, res, next) {
     Config.findOneAndUpdate({key: 'phase'},
         config,
         {upsert: true},
-        function(err, config) {
+        function (err, config) {
             if (req.body.phase === '1') {
                 Rating.remove({}) // Delete ratings
-                    .exec(function(err, ratings) {
+                    .exec(function (err, ratings) {
                         Resource.remove({}) // Delete resources
                             .exec(function (err, resources) {
-
 
                                 res.jsonp({all: 'right'});
                                 getNewResourceAsyncLoop(0, parseInt(req.body.resourcesCount), [], function (resources) {
                                     Resource.insertMany(resources);
+
+                                    User.remove({}) // Delete users
+                                        .exec(function (err, deletedUsers) {
+                                            var users = [];
+                                            for (var i = 0; i < req.body.userCount; i++) {
+                                                var user = new User();
+                                                user.username = 'user' + (i + 1);
+                                                user.password = user.username;
+                                                users.push(user);
+                                            }
+
+                                            User.insertMany(users);
+                                        });
                                 });
                             });
 
@@ -46,17 +59,52 @@ exports.startPhase = function (req, res, next) {
 
 };
 
+/**
+ * Get live results
+ */
+exports.getLiveResults = function (req, res, next) {
+    User.find()
+        .exec(function (err, users) {
+            var combinations = Combination.k_combinations(users, 2);
+
+            for (var i = 0; i < combinations.length; i++) {
+                Rating.find({user: {$in: [combinations[i][0]._id, combinations[i][1]._id]}})
+                    .exec(function (err, ratings) {
+                        
+                    });
+            }
+        });
+};
+
+/**
+ * Get phase info
+ */
+exports.getPhaseInfo = function (req, res, next) {
+    Config.findOne({key: 'phase'})
+        .exec(function (err, config) {
+            res.jsonp({phase: config.value});
+        });
+};
+
 function getNewResourceAsyncLoop(i, limit, resources, callback) {
     if (i < limit) {
         client.get('http://www.splashbase.co/api/v1/images/random?images_only=true' /*?videos_only=true, */, function (data, response) {
-            var resource = new Resource();
-            resource.url = data.url;
-            resource.htmlCode = '<img src="' + resource.url + '" id="content-image" class="materialboxed" />';
-            resources.push(resource);
+            Resource.find({url: data.url}).exec(function (err, duplicateResources) {
+                // Prevent duplicate resources
+                if (duplicateResources.length > 0) {
+                    getNewResourceAsyncLoop(i, limit, resources, callback);
+                } else {
+                    var resource = new Resource();
+                    resource.url = data.url;
+                    resource.htmlCode = '<img src="' + resource.url + '" id="content-image" class="materialboxed" />';
+                    resources.push(resource);
 
-            console.log(resource.url);
+                    console.log(resource.url);
 
-            getNewResourceAsyncLoop(++i, limit, resources, callback);
+                    getNewResourceAsyncLoop(++i, limit, resources, callback);
+                }
+            });
+
         });
     } else {
         callback(resources);
@@ -78,23 +126,26 @@ exports.requestResource = function (req, res, next) {
                     status: 500
                 });
             } else {
-                //while ()
-                var random = Math.random();
-                var resource = resources[Math.floor(resources.length * random)];
-                for (var i = 0; i < resources.length; i++) {
-                    var rated = false;
-                    _.forEach(resources[i].ratings, function (rating) {
-                        if (rating.user && rating.user.username === req.params.username) {
-                            rated = true;
+                User.findOne({username: req.params.username})
+                    .exec(function (err, user) {
+                        if (user.ratings.length >= (resources.length / 2)) {
+                            return res.jsonp({phase1: 'completed'});
+                        } else {
+                            while (true) {
+                                var random = Math.random();
+                                var resource = resources[Math.floor(resources.length * random)];
+                                var rated = false;
+                                _.forEach(resource.ratings, function (rating) {
+                                    if (rating.user && rating.user.username === req.params.username) {
+                                        rated = true;
+                                    }
+                                });
+                                if (!rated) {
+                                    return res.jsonp(resource);
+                                }
+                            }
                         }
                     });
-                    if (!rated) {
-
-                        return res.jsonp();
-                    }
-
-                }
-                res.jsonp({});
             }
         });
 };
@@ -142,7 +193,7 @@ exports.rateResource = function (req, res, next) {
                 User.findOneAndUpdate({
                         _id: currUser._id
                     },
-                    user)
+                    currUser)
                     .exec(function (err, savedUser) {
                         if (err) return next(err);
                         if (!savedUser) return next(new Error('Failed to update User ' + currUser._id));
@@ -160,15 +211,15 @@ exports.rateResource = function (req, res, next) {
                                         return res.status(400).send(Util.easifyErrors(err));
                                     }
                                     Rating.aggregate([
-                                            {$match: {resource: resource._id}},
-                                            {
-                                                $group: {
-                                                    _id: rating._id,
-                                                    average: {$avg: '$score'},
-                                                    count: { $sum: 1 }
-                                                }
+                                        {$match: {resource: resource._id}},
+                                        {
+                                            $group: {
+                                                _id: rating._id,
+                                                average: {$avg: '$score'},
+                                                count: {$sum: 1}
                                             }
-                                        ])
+                                        }
+                                    ])
                                         .exec(function (err, avgScore) {
                                             if (err) return next(err);
                                             var resObject = {
@@ -176,15 +227,15 @@ exports.rateResource = function (req, res, next) {
                                                 resourceCount: avgScore[0].count
                                             };
                                             Rating.aggregate([
-                                                    {$match: {user: currUser._id}},
-                                                    {
-                                                        $group: {
-                                                            _id: currUser._id,
-                                                            average: {$avg: '$score'},
-                                                            count: { $sum: 1 }
-                                                        }
+                                                {$match: {user: currUser._id}},
+                                                {
+                                                    $group: {
+                                                        _id: currUser._id,
+                                                        average: {$avg: '$score'},
+                                                        count: {$sum: 1}
                                                     }
-                                                ])
+                                                }
+                                            ])
                                                 .exec(function (err, avgScore) {
                                                     if (err) return next(err);
                                                     resObject.userAverage = avgScore[0].average;

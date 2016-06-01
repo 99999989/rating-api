@@ -4,6 +4,10 @@ var matchingController = require('../controllers/matching');
 
 router.get('/resource/:username', matchingController.requestResource);
 
+router.get('/phase', matchingController.getPhaseInfo);
+
+router.get('/results', matchingController.getLiveResults);
+
 router.post('/rating', matchingController.rateResource);
 
 router.post('/phase', matchingController.startPhase);

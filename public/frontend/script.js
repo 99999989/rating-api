@@ -38,6 +38,7 @@ $(document).ready(function () {
 
 function initRatePane() {
     $(".splash-pane").css({display: 'none'});
+    $(".completed-pane").css({display: 'none'});
     $("#loading-spinner").css({opacity: 0});
     $("#rating-pane").css({display: 'inline'});
     $("#rating-average").html('?');
@@ -61,26 +62,32 @@ function getContent() {
         type: "get"
     }).done(function (msg) {
 
-        var isMp4 =  msg.url.indexOf('.mp4') > -1,
-            isWebm = msg.url.indexOf('.webm') > -1,
-            isOgg = msg.url.indexOf('.ogg') > -1;
-        if (isMp4 || isWebm || isOgg) {
-            $("#content-image").css({display: 'none'});
-            var video = document.getElementById('content-video');
-            var source = document.getElementById('content-mp4');
-            source.type = isMp4 ? 'video/mp4' : isWebm ? 'video/webm' : 'video/ogg';
-            source.src = msg.url;
-            video.load();
-            video.play();
-            $('#content-video').css({display: 'block'});
-
+        if (msg.phase1 === 'completed') {
+            setVisible(true, '.completed-pane');
+            setVisible(false, '.splash-pane');
+            setVisible(false, '#rating-pane');
+            $("#loading-spinner").css({opacity: 0});
         } else {
-            $("#content-image").css({display: 'block'});
-            $(".content-image").attr("src", msg.url);
-        }
-        //$("#reload").removeClass('trigger');
-        $("#content_name").val(msg._id);
+            var isMp4 =  msg.url.indexOf('.mp4') > -1,
+                isWebm = msg.url.indexOf('.webm') > -1,
+                isOgg = msg.url.indexOf('.ogg') > -1;
+            if (isMp4 || isWebm || isOgg) {
+                $("#content-image").css({display: 'none'});
+                var video = document.getElementById('content-video');
+                var source = document.getElementById('content-mp4');
+                source.type = isMp4 ? 'video/mp4' : isWebm ? 'video/webm' : 'video/ogg';
+                source.src = msg.url;
+                video.load();
+                video.play();
+                $('#content-video').css({display: 'block'});
 
+            } else {
+                $("#content-image").css({display: 'block'});
+                $(".content-image").attr("src", msg.url);
+            }
+            //$("#reload").removeClass('trigger');
+            $("#content_name").val(msg._id);
+        }
     });
 }
 
@@ -141,6 +148,14 @@ function saveRating(content, rating) {
 
         getContent();
     });
+}
+
+function setVisible(visible, id) {
+    if (visible) {
+        $(id).css({display: 'block'});
+    } else {
+        $(id).css({display: 'none'});
+    }
 }
 
 $.urlParam = function (name) {

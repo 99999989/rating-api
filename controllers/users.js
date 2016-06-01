@@ -4,7 +4,7 @@
  * Controller dependencies
  */
 var User = require('../models/user'),
-    Util = require('../util');
+    Util = require('../util/util');
 
 
 /**
@@ -68,7 +68,9 @@ exports.destroy = function (req, res, next) {
  * List of Users
  */
 exports.all = function (req, res) {
-    User.find().sort('-created').exec(function (err, users) {
+    User.find()
+        .populate('ratings')
+        .sort('-created').exec(function (err, users) {
         if (err) {
             res.render('error', {
                 status: 500
