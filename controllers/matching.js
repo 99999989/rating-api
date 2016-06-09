@@ -159,7 +159,7 @@ function getNewResourceAsyncLoop(i, limit, resources, callback) {
 exports.requestRecommendedResource = function (req, res, next) {
     User.findOne({username: req.params.username})
         .exec(function (err, user) {
-            Coefficient.findOne({$or: {user1: user._id, user2: user._id}})
+            Coefficient.findOne({$or: [{user1: user._id}, {user2: user._id}]})
                 .sort('-coefficient')
                 .exec(function (err, coefficient) {
                     var matchingUser = coefficient.user1 === user._id ? coefficient.user2 : coefficient.user1;
