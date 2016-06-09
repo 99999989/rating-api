@@ -7,6 +7,7 @@ var Rating = require('../models/rating'),
     Resource = require('../models/resource'),
     User = require('../models/user'),
     Config = require('../models/config'),
+    Coefficient = require('../models/coefficient'),
     Util = require('../util/util'),
     Combination = require('../util/combination'),
     _ = require('lodash');
@@ -54,6 +55,9 @@ exports.startPhase = function (req, res, next) {
                             });
 
                     });
+            } else if (req.body.phase === '2') {
+
+
             }
         });
 
@@ -68,11 +72,50 @@ exports.getLiveResults = function (req, res, next) {
             var combinations = Combination.k_combinations(users, 2);
 
             for (var i = 0; i < combinations.length; i++) {
-                Rating.find({user: {$in: [combinations[i][0]._id, combinations[i][1]._id]}})
-                    .exec(function (err, ratings) {
+                (function (index) {
+                    Rating.find({user: {$in: [combinations[i][0]._id, combinations[i][1]._id]}})
+                        .populate('user resource')
+                        .exec(function (err, ratings) {
+                            var matchings = [];
+                            for (var j = 0; j < ratings.length; j++) {
+                                var matching = _.find(matchings, {resource: ratings[j].resource._id});
+                                if (matching) {
+                                    matching.rating2 = ratings[j].score;
+                                } else {
+                                    matching = {
+                                        resource: ratings[j].resource._id,
+                                        rating1: ratings[j].score
+                                    };
+                                    matchings.push(matching);
+                                }
+                            }
 
-                    });
+                            var relationCoefficient = matchings.length > 0 ? 0 : -1;
+                            var matchingCounter = 0;
+                            _.forEach(matchings, function(matching) {
+                                if (matching.rating2) {
+                                    var delta = matching.rating1 - matching.rating2;
+                                    delta = delta < 0 ? delta * (-1) : delta;
+                                    relationCoefficient += delta;
+                                    matchingCounter++;
+                                }
+                            });
+                            var coefficient = new Coefficient();
+                            coefficient.user1 = combinations[index][0]._id;
+                            coefficient.user2 = combinations[index][1]._id;
+                            coefficient.coefficient = relationCoefficient;
+                            coefficient.precision = matchingCounter;
+
+                            coefficient.save(function (err) {
+                                if (err) {
+                                    return res.status(400).send(Util.easifyErrors(err));
+                                }
+
+                            });
+                        });
+                }(i));
             }
+            res.jsonp({});
         });
 };
 
@@ -110,6 +153,31 @@ function getNewResourceAsyncLoop(i, limit, resources, callback) {
         callback(resources);
     }
 }
+/**
+ * Request new recommended resource
+ */
+exports.requestRecommendedResource = function (req, res, next) {
+    Coefficient.findOne({$or: {user1: req.params.userId, user2: req.params.userId}})
+        .sort('-coefficient')
+        .exec(function (err, coefficient) {
+            var matchingUser = coefficient.user1 === req.params.userId ? coefficient.user2 : coefficient.user1;
+
+            Resource.find({'ratings.user': matchingUser, $not: {'ratings.user': req.params.userId}})
+                .populate({
+                    path: 'ratings',
+                    populate: {path: 'user'}
+                })
+                .exec(function (err, resources) {
+                    if (resources && resources.length > 0) {
+                        var resource = {
+                            url: resources[i].url,
+                            estimation: _.find(resources[i].ratings, {'user._id': matchingUser}).score
+                        };
+                        res.jsonp(resource);
+                    }
+                });
+        });
+};
 
 /**
  * Request new resource

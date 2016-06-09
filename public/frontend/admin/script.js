@@ -13,6 +13,7 @@ function getCurrentData() {
     }).done(function (response) {
 
         if (response.phase === '1') {
+            setVisible(false, '.phase1-start');
             setVisible(false, '#phase2');
             setVisible(false, '#phase3');
         } else if (response.phase === '2') {
