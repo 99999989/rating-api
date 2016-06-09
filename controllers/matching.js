@@ -157,26 +157,31 @@ function getNewResourceAsyncLoop(i, limit, resources, callback) {
  * Request new recommended resource
  */
 exports.requestRecommendedResource = function (req, res, next) {
-    Coefficient.findOne({$or: {user1: req.params.userId, user2: req.params.userId}})
-        .sort('-coefficient')
-        .exec(function (err, coefficient) {
-            var matchingUser = coefficient.user1 === req.params.userId ? coefficient.user2 : coefficient.user1;
+    User.findOne({username: req.params.username})
+        .exec(function (err, user) {
+            Coefficient.findOne({$or: {user1: user._id, user2: user._id}})
+                .sort('-coefficient')
+                .exec(function (err, coefficient) {
+                    var matchingUser = coefficient.user1 === user._id ? coefficient.user2 : coefficient.user1;
 
-            Resource.find({'ratings.user': matchingUser, $not: {'ratings.user': req.params.userId}})
-                .populate({
-                    path: 'ratings',
-                    populate: {path: 'user'}
-                })
-                .exec(function (err, resources) {
-                    if (resources && resources.length > 0) {
-                        var resource = {
-                            url: resources[i].url,
-                            estimation: _.find(resources[i].ratings, {'user._id': matchingUser}).score
-                        };
-                        res.jsonp(resource);
-                    }
+                    Resource.find({'ratings.user': matchingUser, $not: {'ratings.user': user._id}})
+                        .populate({
+                            path: 'ratings',
+                            populate: {path: 'user'}
+                        })
+                        .exec(function (err, resources) {
+                            if (resources && resources.length > 0) {
+                                var resource = {
+                                    _id: resources[i]._id,
+                                    url: resources[i].url,
+                                    estimatedScore: _.find(resources[i].ratings, {'user._id': matchingUser}).score
+                                };
+                                res.jsonp(resource);
+                            }
+                        });
                 });
         });
+
 };
 
 /**

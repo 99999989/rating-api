@@ -22,6 +22,9 @@ var RatingSchema = new Schema({
         type: Number,
         required: true
     },
+    estimatedScore: {
+        type: Number
+    },
     created: {
         type: Date,
         default: Date.now()
