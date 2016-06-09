@@ -103,7 +103,7 @@ exports.getLiveResults = function (req, res, next) {
                             var coefficient = new Coefficient();
                             coefficient.user1 = combinations[index][0]._id;
                             coefficient.user2 = combinations[index][1]._id;
-                            coefficient.coefficient = relationCoefficient;
+                            coefficient.coefficient = relationCoefficient / matchingCounter;
                             coefficient.precision = matchingCounter;
 
                             coefficient.save(function (err) {
