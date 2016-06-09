@@ -73,17 +73,17 @@ exports.getLiveResults = function (req, res, next) {
 
             for (var i = 0; i < combinations.length; i++) {
                 (function (index) {
-                    Rating.find({user: {$in: [combinations[i][0]._id, combinations[i][1]._id]}})
+                    Rating.find({user: {$in: [combinations[index][0]._id, combinations[index][1]._id]}})
                         .populate('user resource')
                         .exec(function (err, ratings) {
                             var matchings = [];
                             for (var j = 0; j < ratings.length; j++) {
-                                var matching = _.find(matchings, {resource: ratings[j].resource._id});
+                                var matching = _.find(matchings, {resource: ratings[j].resource.id});
                                 if (matching) {
                                     matching.rating2 = ratings[j].score;
                                 } else {
                                     matching = {
-                                        resource: ratings[j].resource._id,
+                                        resource: ratings[j].resource.id,
                                         rating1: ratings[j].score
                                     };
                                     matchings.push(matching);
@@ -103,7 +103,7 @@ exports.getLiveResults = function (req, res, next) {
                             var coefficient = new Coefficient();
                             coefficient.user1 = combinations[index][0]._id;
                             coefficient.user2 = combinations[index][1]._id;
-                            coefficient.coefficient = relationCoefficient / matchingCounter;
+                            coefficient.coefficient = relationCoefficient / (matchingCounter > 0 ? matchingCounter : 1);
                             coefficient.precision = matchingCounter;
 
                             coefficient.save(function (err) {
@@ -163,9 +163,9 @@ exports.requestRecommendedResource = function (req, res, next) {
             Coefficient.findOne({$or: [{user1: userId}, {user2: userId}]})
                 .sort('-coefficient')
                 .exec(function (err, coefficient) {
-                    var matchingUser = coefficient.user1 === user._id ? coefficient.user2 : coefficient.user1;
+                    var matchingUser = coefficient.user1 === user.id ? coefficient.user2 : coefficient.user1;
 
-                    Resource.find({'ratings.user': matchingUser, $not: {'ratings.user': user._id}})
+                    Resource.find({'ratings.user': matchingUser, $not: {'ratings.user': user.id}})
                         .populate({
                             path: 'ratings',
                             populate: {path: 'user'}
