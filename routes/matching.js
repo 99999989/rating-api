@@ -6,6 +6,8 @@ router.get('/resource/:username', matchingController.requestResource);
 
 router.get('/recommended/:username', matchingController.requestRecommendedResource);
 
+router.get('/coefficients', matchingController.getCoefficients);
+
 router.get('/phase', matchingController.getPhaseInfo);
 
 router.get('/results', matchingController.getLiveResults);

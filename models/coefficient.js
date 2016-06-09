@@ -19,10 +19,12 @@ var mongoose  = require('mongoose'),
  */
 var CoefficientSchema = new Schema({
     user1: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     },
     user2: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     },
     coefficient: {
         type: Number

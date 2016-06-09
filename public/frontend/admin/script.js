@@ -7,6 +7,7 @@ getCurrentData();
 setVisible(false, '.phase-finished');
 // Get current data
 function getCurrentData() {
+    var currentPhase;
     $.ajax({
         url: '/api/matching/phase',
         type: 'get'
@@ -23,7 +24,7 @@ function getCurrentData() {
             setVisible(true, '#phase2');
             setVisible(true, '#phase3');
         }
-
+        currentPhase = response.phase;
     });
 
     $.ajax({
@@ -43,14 +44,24 @@ function getCurrentData() {
                     '" value="' + users[i].ratings.length + '" /></p>' +
                     '<div class="row" style="font-size:x-small"><div class="col s4">0%</div> <div class="col s4 center-align">50%</div><div class="col s4 right-align">100% </div></div>');
             }
-/*
-            $.ajax({
-                url: '/api/matching/results',
-                type: 'get'
-            }).done(function (results) {
 
-            });
-            */
+            if (currentPhase === '2') {
+                $.ajax({
+                    url: '/api/matching/coefficients',
+                    type: 'get'
+                }).done(function (coefficients) {
+                    for (var i = 0; i < coefficients.length; i++) {
+                        $('#coefficientsContainer').append('<div class="row" style="font-size:small"><div class="col s4">' +
+                            coefficients[i].user1.username +
+                            '</div> <div class="col s4 center-align">' +
+                            coefficients[i].coefficient.toFixed(2) + '/' + coefficients[i].precision +
+                            '</div><div class="col s4 right-align">' +
+                            coefficients[i].user2.username +
+                            '</div></div>');
+                    }
+
+                });
+            }
         });
     });
 

@@ -56,7 +56,7 @@ exports.startPhase = function (req, res, next) {
 
                     });
             } else if (req.body.phase === '2') {
-
+                res.jsonp({all: 'right'});
 
             }
         });
@@ -101,8 +101,8 @@ exports.getLiveResults = function (req, res, next) {
                                 }
                             });
                             var coefficient = new Coefficient();
-                            coefficient.user1 = combinations[index][0]._id;
-                            coefficient.user2 = combinations[index][1]._id;
+                            coefficient.user1 = combinations[index][0];
+                            coefficient.user2 = combinations[index][1];
                             coefficient.coefficient = relationCoefficient / (matchingCounter > 0 ? matchingCounter : 1);
                             coefficient.precision = matchingCounter;
 
@@ -115,7 +115,18 @@ exports.getLiveResults = function (req, res, next) {
                         });
                 }(i));
             }
-            res.jsonp({});
+
+            var config = {
+                key: 'phase',
+                value: '2',
+                group: 'phase'
+            };
+            Config.findOneAndUpdate({key: 'phase'},
+                config,
+                {upsert: true},
+                function (err, config) {
+                    res.jsonp({phase: '2'});
+                });
         });
 };
 
@@ -160,10 +171,10 @@ exports.requestRecommendedResource = function (req, res, next) {
     User.findOne({username: req.params.username})
         .exec(function (err, user) {
             var userId = user.id;
-            Coefficient.findOne({$or: [{user1: userId}, {user2: userId}]})
-                .sort('-coefficient')
+            Coefficient.findOne({$or: [{user1: user}, {user2: user}]})
+                .sort('coefficient')
                 .exec(function (err, coefficient) {
-                    var matchingUser = coefficient.user1 === user.id ? coefficient.user2 : coefficient.user1;
+                    var matchingUser = coefficient.user1.id === user.id ? coefficient.user2 : coefficient.user1;
 
                     Resource.find({'ratings.user': matchingUser, $not: {'ratings.user': user.id}})
                         .populate({
@@ -243,6 +254,15 @@ function getNewResource(res) {
         // "source_id":266,"copyright":"CC0","site":"gratisography"}
     });
 }
+/**
+ * Get coefficients
+ */
+exports.getCoefficients = function (req, res, next) {
+    Coefficient.find().populate('user1 user2').sort('coefficient -precision')
+        .exec(function (err, coefficients) {
+            res.jsonp(coefficients);
+        });
+};
 
 /**
  * Create rating
