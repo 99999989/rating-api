@@ -25,6 +25,7 @@ function getCurrentData() {
             setVisible(true, '#phase3');
         }
         currentPhase = response.phase;
+        $('#phase').val(response.phase);
     });
 
     $.ajax({

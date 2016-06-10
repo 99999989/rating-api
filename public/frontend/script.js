@@ -56,13 +56,14 @@ function loaded() {
 // Get Random Content, rating: 0=Dislike, 1=Like, ""=Ohne
 function getContent() {
     $("#content-image").css({opacity: 0});
-
+    var mode =
     $.ajax({
         url:  "/api/matching/resource/" + $.urlParam('name'),
         type: "get"
     }).done(function (msg) {
 
-        if (msg.phase1 === 'completed') {
+        if (msg.completed) {
+            $('#phaseText').text(msg.completed + ' beendet!');
             setVisible(true, '.completed-pane');
             setVisible(false, '.splash-pane');
             setVisible(false, '#rating-pane');
@@ -87,6 +88,7 @@ function getContent() {
             }
             //$("#reload").removeClass('trigger');
             $("#content_name").val(msg._id);
+            $("#estimated_score").val(msg.estimatedScore);
         }
     });
 }
@@ -137,7 +139,8 @@ function saveRating(content, rating) {
         data: {
             username: $.urlParam('name'),
             score: rating,
-            resourceId: content
+            resourceId: content,
+            estimatedScore: $("#estimated_score").val()
         }
     }).done(function (res) {
         //alert(JSON.stringify(msg));

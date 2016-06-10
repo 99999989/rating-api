@@ -164,76 +164,109 @@ function getNewResourceAsyncLoop(i, limit, resources, callback) {
         callback(resources);
     }
 }
-/**
- * Request new recommended resource
- */
-exports.requestRecommendedResource = function (req, res, next) {
-    User.findOne({username: req.params.username})
-        .exec(function (err, user) {
-            var userId = user.id;
-            Coefficient.findOne({$or: [{user1: user}, {user2: user}]})
-                .sort('coefficient')
-                .exec(function (err, coefficient) {
-                    var matchingUser = coefficient.user1.id === user.id ? coefficient.user2 : coefficient.user1;
 
-                    Resource.find({'ratings.user': matchingUser, $not: {'ratings.user': user.id}})
-                        .populate({
-                            path: 'ratings',
-                            populate: {path: 'user'}
-                        })
-                        .exec(function (err, resources) {
-                            if (resources && resources.length > 0) {
-                                var resource = {
-                                    _id: resources[i]._id,
-                                    url: resources[i].url,
-                                    estimatedScore: _.find(resources[i].ratings, {'user._id': matchingUser}).score
-                                };
-                                res.jsonp(resource);
-                            }
-                        });
-                });
-        });
-
-};
 
 /**
  * Request new resource
  */
 exports.requestResource = function (req, res, next) {
-    Resource.find()
-        .populate({
-            path: 'ratings',
-            populate: {path: 'user'}
-        })
-        .exec(function (err, resources) {
-            if (err) {
-                res.render('error', {
-                    status: 500
-                });
-            } else {
-                User.findOne({username: req.params.username})
-                    .exec(function (err, user) {
-                        if (!user) return res.jsonp({phase1: 'completed'});
-                        if (user.ratings && user.ratings.length >= (resources.length / 2)) {
-                            return res.jsonp({phase1: 'completed'});
+    var that = this;
+    Config.findOne({key: 'phase'})
+        .exec(function (err, config) {
+            if (config.value === '1') {
+                Resource.find()
+                    .populate({
+                        path: 'ratings',
+                        populate: {path: 'user'}
+                    })
+                    .exec(function (err, resources) {
+                        if (err) {
+                            res.render('error', {
+                                status: 500
+                            });
                         } else {
-                            while (true) {
-                                var random = Math.random();
-                                var resource = resources[Math.floor(resources.length * random)];
-                                var rated = false;
-                                _.forEach(resource.ratings, function (rating) {
-                                    if (rating.user && rating.user.username === req.params.username) {
-                                        rated = true;
+                            User.findOne({username: req.params.username})
+                                .exec(function (err, user) {
+                                    if (!user) return res.jsonp({completed: 'Phase 1'});
+                                    if (user.ratings && user.ratings.length >= (resources.length / 2)) {
+                                        return res.jsonp({completed: 'Phase 1'});
+                                    } else {
+                                        while (true) {
+                                            var random = Math.random();
+                                            var resource = resources[Math.floor(resources.length * random)];
+                                            var rated = false;
+                                            _.forEach(resource.ratings, function (rating) {
+                                                if (rating.user && rating.user.username === req.params.username) {
+                                                    rated = true;
+                                                }
+                                            });
+                                            if (!rated) {
+                                                return res.jsonp(resource);
+                                            }
+                                        }
                                     }
                                 });
-                                if (!rated) {
-                                    return res.jsonp(resource);
-                                }
-                            }
                         }
                     });
+                // recommended resource
+            } else {
+                User.findOne({username: req.params.username})
+                    .populate('ratings')
+                    .exec(function (err, user) {
+                        var userId = user.id;
+                        Coefficient.findOne({$or: [{user1: user}, {user2: user}]})
+                            .populate('user1 user2')
+                            .sort('coefficient -precision')
+                            .exec(function (err, coefficient) {
+                                var matchingUser = coefficient.user1.id === user.id ? coefficient.user2 : coefficient.user1;
+
+                                Resource.find()
+                                    .populate({
+                                        path: 'ratings',
+                                        populate: {
+                                            path: 'user'
+
+                                        }
+
+                                    })
+                                    .exec(function (err, resources) {
+                                        for (var i = 0; i < resources.length; i++) {
+                                            var resource = resources[i];
+                                            var selfRated = false;
+                                            var rated = false;
+                                            _.forEach(resource.ratings, function (rating) {
+                                                if (rating.user && rating.user.username === matchingUser.username) {
+                                                    rated = true;
+                                                }
+                                                else if (rating.user && rating.user.username === user.username) {
+                                                    selfRated = true;
+                                                }
+                                            });
+                                            if (!selfRated && rated) {
+                                                return res.jsonp({
+                                                    _id: resource.id,
+                                                    url: resource.url,
+                                                    estimatedScore: _.find(resource.ratings, function(rating) {
+                                                        return rating.user.id === matchingUser.id;
+                                                    }).score
+                                                });
+                                            }
+                                        }
+                                        return res.jsonp({completed: 'Phase 3'});
+                                    });
+                            });
+                    });
+
             }
         });
+
+
+};
+/**
+ * Request new recommended resource
+ */
+exports.requestRecommendedResource = function (req, res, next) {
+
 };
 
 function getNewResource(res) {
@@ -277,6 +310,7 @@ exports.rateResource = function (req, res, next) {
             var rating = new Rating();
             rating.score = req.body.score;
             rating.resource = req.body.resourceId;
+            rating.estimatedScore = req.body.estimatedScore ? req.body.estimatedScore : -1;
             rating.user = user[0]._id;
             var currUser = user[0];
             rating.save(function (err) {
