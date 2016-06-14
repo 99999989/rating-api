@@ -264,9 +264,9 @@ exports.requestResource = function (req, res, next) {
                                 Coefficient.findOne({$or: [{user1: user}, {user2: user}]})
                                     .populate('user1 user2')
                                     .sort('weightedCoefficient -precision')
-                                    .exec(function (err, coefficient) {
-                                        var matchingUser2 = coefficient.user1.id === user.id ? coefficient.user2 : coefficient.user1;
-
+                                    .exec(function (err, coefficient2) {
+                                        var matchingUser2 = coefficient2.user1.id === user.id ? coefficient2.user2 : coefficient2.user1;
+                                        console.log('Svendroid: ' + matchingUser2);
                                         Resource.find()
                                             .populate({
                                                 path: 'ratings',
