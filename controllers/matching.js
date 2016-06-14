@@ -289,15 +289,16 @@ exports.requestResource = function (req, res, next) {
                                                         }
                                                     });
                                                     if (!selfRated && rated) {
+                                                        var weightedScore = _.find(resource.ratings, function(rating) {
+                                                            return rating.user.id === matchingUser2.id;
+                                                        });
                                                         return res.jsonp({
                                                             _id: resource.id,
                                                             url: resource.url,
                                                             estimatedScore: _.find(resource.ratings, function(rating) {
                                                                 return rating.user.id === matchingUser.id;
                                                             }).score,
-                                                            estimatedWeightedScore: _.find(resource.ratings, function(rating) {
-                                                                return rating.user.id === matchingUser2.id;
-                                                            }).score
+                                                            estimatedWeightedScore: weightedScore ? weightedScore.score : -10
                                                         });
                                                     }
                                                 }
