@@ -3,7 +3,7 @@ $(document).ready(function () {
 
 
     getContent();
-    $("#username").html($.urlParam('name'));
+    $("#username").html($.urlParam('name')); 
 // Get First Random Content
     $("#get").click(function () {
         $("#reload").addClass('trigger');
@@ -89,6 +89,7 @@ function getContent() {
             //$("#reload").removeClass('trigger');
             $("#content_name").val(msg._id);
             $("#estimated_score").val(msg.estimatedScore);
+            $("#estimated_weighted_score").val(msg.estimatedWeightedScore);
         }
     });
 }
@@ -140,7 +141,8 @@ function saveRating(content, rating) {
             username: $.urlParam('name'),
             score: rating,
             resourceId: content,
-            estimatedScore: $("#estimated_score").val()
+            estimatedScore: $("#estimated_score").val() !== '' ? parseInt($("#estimated_score").val()) : -10,
+            estimatedWeightedScore: $("#estimated_weighted_score").val() !== '' ? parseInt($("#estimated_weighted_score").val()) : -10
         }
     }).done(function (res) {
         //alert(JSON.stringify(msg));

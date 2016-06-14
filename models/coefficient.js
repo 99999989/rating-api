@@ -31,6 +31,9 @@ var CoefficientSchema = new Schema({
     },
     precision: {
         type: Number
+    },
+    weightedCoefficient: {
+        type: Number
     }
 });
 

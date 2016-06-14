@@ -239,3 +239,7 @@ a#get {
 		height: 50px;
 	}
 }
+
+ul {
+	list-style: none;
+}

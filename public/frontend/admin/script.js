@@ -46,7 +46,7 @@ function getCurrentData() {
                     '<div class="row" style="font-size:x-small"><div class="col s4">0%</div> <div class="col s4 center-align">50%</div><div class="col s4 right-align">100% </div></div>');
             }
 
-            if (currentPhase === '2') {
+            if (currentPhase === '2' || currentPhase === '3') {
                 $.ajax({
                     url: '/api/matching/coefficients',
                     type: 'get'
@@ -55,7 +55,7 @@ function getCurrentData() {
                         $('#coefficientsContainer').append('<div class="row" style="font-size:small"><div class="col s4">' +
                             coefficients[i].user1.username +
                             '</div> <div class="col s4 center-align">' +
-                            coefficients[i].coefficient.toFixed(2) + '/' + coefficients[i].precision +
+                            coefficients[i].coefficient.toFixed(2) + '/' + coefficients[i].precision + '/' + coefficients[i].weightedCoefficient.toFixed(2) +
                             '</div><div class="col s4 right-align">' +
                             coefficients[i].user2.username +
                             '</div></div>');
