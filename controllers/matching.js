@@ -356,8 +356,8 @@ exports.getFinalResults = function (req, res, next) {
     User.find()
         .exec(function (err, users) {
             var ratings = [];
-            getUserRatingsAsyncLoop(0, users, ratings, function(ratings) {
-                res.jsonp(ratings);
+            getUserRatingsAsyncLoop(0, users, ratings, function(scores) {
+                res.jsonp(scores);
             });
         });
 };
@@ -372,10 +372,10 @@ exports.getFinalResults = function (req, res, next) {
 function getUserRatingsAsyncLoop(i, users, ratings, callback) {
     if (i < users.length) {
          Rating.find({user: users[i]})
-             .exec(function (err, ratings) {
+             .exec(function (err, ratingList) {
                  var score = 0;
                  var weightedScore = 0;
-                 _.forEach(ratings, function (rating) {
+                 _.forEach(ratingList, function (rating) {
                      var delta = rating.score - rating.estimatedScore;
                      delta = delta < 0 ? delta * (-1) : delta; // Get positive value
 
@@ -387,8 +387,8 @@ function getUserRatingsAsyncLoop(i, users, ratings, callback) {
                  });
                  ratings.push({
                      username: users[i].username,
-                     scoreDeviation: score / ratings.length,
-                     weightedScoreDeviation: weightedScore / ratings.length
+                     scoreDeviation: score / ratingList.length,
+                     weightedScoreDeviation: weightedScore / ratingList.length
                  });
 
                  getUserRatingsAsyncLoop(++i, users, ratings, callback);
