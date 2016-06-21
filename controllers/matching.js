@@ -371,7 +371,7 @@ exports.getFinalResults = function (req, res, next) {
  */
 function getUserRatingsAsyncLoop(i, users, ratings, callback) {
     if (i < users.length) {
-         Rating.find({user: users[i]})
+         Rating.find({user: users[i]._id})
              .exec(function (err, ratingList) {
                  var score = 0;
                  var weightedScore = 0;
