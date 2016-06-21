@@ -371,22 +371,27 @@ exports.getFinalResults = function (req, res, next) {
  */
 function getUserRatingsAsyncLoop(i, users, ratings, callback) {
     if (i < users.length) {
-         Rating.find({user: users[i]._id, $not: {estimatedWeightedScore: null}})
+         Rating.find({user: users[i]._id})
              .exec(function (err, ratingList) {
                  var score = 0;
                  var weightedScore = 0;
+                 var counter = 0;
                  _.forEach(ratingList, function (rating) {
-                     var delta = rating.score - rating.estimatedScore;
-                     delta = delta < 0 ? delta * (-1) : delta; // Get positive value
+                     if (ratingList.estimatedWeightedScore) {
+                         var delta = rating.score - rating.estimatedScore;
+                         delta = delta < 0 ? delta * (-1) : delta; // Get positive value
 
-                     var weightDelta = rating.score - rating.estimatedWeightedScore;
-                     weightDelta = weightDelta < 0 ? weightDelta * (-1) : weightDelta; // Get positive value
+                         var weightDelta = rating.score - rating.estimatedWeightedScore;
+                         weightDelta = weightDelta < 0 ? weightDelta * (-1) : weightDelta; // Get positive value
 
-                     score += delta;
-                     weightedScore += weightDelta;
+                         score += delta;
+                         weightedScore += weightDelta;
+                         counter++;
+                     }
+
                  });
-                 score = score / ratingList.length;
-                 weightedScore = weightedScore / ratingList.length;
+                 score = score / counter;
+                 weightedScore = weightedScore / counter;
                  ratings.push({
                      username: users[i].username,
                      scoreDeviation: score,
