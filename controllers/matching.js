@@ -377,7 +377,7 @@ function getUserRatingsAsyncLoop(i, users, ratings, callback) {
                  var weightedScore = 0;
                  var counter = 0;
                  _.forEach(ratingList, function (rating) {
-                     if (ratingList.estimatedWeightedScore) {
+                     if (rating.estimatedWeightedScore) {
                          var delta = rating.score - rating.estimatedScore;
                          delta = delta < 0 ? delta * (-1) : delta; // Get positive value
 
