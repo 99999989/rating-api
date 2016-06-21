@@ -385,10 +385,12 @@ function getUserRatingsAsyncLoop(i, users, ratings, callback) {
                      score += delta;
                      weightedScore += weightDelta;
                  });
+                 score = score / ratingList.length;
+                 weightedScore = weightedScore / ratingList.length;
                  ratings.push({
                      username: users[i].username,
-                     scoreDeviation: score / ratingList.length,
-                     weightedScoreDeviation: weightedScore / ratingList.length
+                     scoreDeviation: score,
+                     weightedScoreDeviation: weightedScore
                  });
 
                  getUserRatingsAsyncLoop(++i, users, ratings, callback);
