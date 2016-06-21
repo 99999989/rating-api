@@ -61,7 +61,23 @@ function getCurrentData() {
                             '</div></div>');
                     }
 
+                    $.ajax({
+                        url: '/api/matching/final',
+                        type: 'get'
+                    }).done(function (users) {
+                        for (var i = 0; i < users.length; i++) {
+                            $('#finalContainer').append('<div class="row" style="font-size:small"><div class="col s4">' +
+                                users[i].username +
+                                '</div> <div class="col s4 center-align">' +
+                                users[i].scoreDeviation.toFixed(2) + 
+                                '</div><div class="col s4 right-align">' +
+                                users[i].weightedScoreDeviation.toFixed(2) +
+                                '</div></div>');
+                        }
+
+                    });
                 });
+
             }
         });
     });

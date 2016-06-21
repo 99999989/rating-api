@@ -12,6 +12,8 @@ router.get('/phase', matchingController.getPhaseInfo);
 
 router.get('/results', matchingController.getLiveResults);
 
+router.get('/final', matchingController.getFinalResults);
+
 router.post('/rating', matchingController.rateResource);
 
 router.post('/phase', matchingController.startPhase);

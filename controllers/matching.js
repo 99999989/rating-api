@@ -350,6 +350,54 @@ exports.getCoefficients = function (req, res, next) {
 };
 
 /**
+ * Get final results
+ */
+exports.getFinalResults = function (req, res, next) {
+    User.find()
+        .exec(function (err, users) {
+            var ratings = [];
+            getUserRatingsAsyncLoop(0, users, ratings, function(ratings) {
+                res.jsonp(ratings);
+            });
+        });
+};
+
+/**
+ *
+ * @param i
+ * @param users
+ * @param ratings
+ * @param callback
+ */
+function getUserRatingsAsyncLoop(i, users, ratings, callback) {
+    if (i < users.length) {
+         Rating.find({user: users[i]})
+             .exec(function (err, ratings) {
+                 var score = 0;
+                 var weightedScore = 0;
+                 _.forEach(ratings, function (rating) {
+                     var delta = rating.score - rating.estimatedScore;
+                     delta = delta < 0 ? delta * (-1) : delta; // Get positive value
+
+                     var weightDelta = rating.score - rating.estimatedWeightedScore;
+                     weightDelta = weightDelta < 0 ? weightDelta * (-1) : weightDelta; // Get positive value
+
+                     score += delta;
+                     weightedScore += weightDelta;
+                 });
+                 ratings.push({
+                     username: users[i].username,
+                     scoreDeviation: score / ratings.length,
+                     weightedScoreDeviation: weightedScore / ratings.length
+                 });
+
+                 getUserRatingsAsyncLoop(++i, users, ratings, callback);
+             });
+    } else {
+        callback(ratings);
+    }
+}
+/**
  * Create rating
  */
 exports.rateResource = function (req, res, next) {
