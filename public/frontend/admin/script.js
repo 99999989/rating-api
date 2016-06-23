@@ -107,6 +107,18 @@ function startPhase(phase) {
 
 }
 
+function generateResults() {
+    ///api/matching/results
+    $.ajax({
+        url: '/api/matching/results',
+        type: 'get'
+    }).done(function (msg) {
+        Materialize.toast('Koeffizienten erzeugt', 4000);
+
+    });
+
+}
+
 function setVisible(visible, id) {
     if (visible) {
         $(id).css({display: 'block'});
